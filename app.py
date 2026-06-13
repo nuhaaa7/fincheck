@@ -4,7 +4,7 @@ import joblib
 # ---------------- PAGE CONFIG ----------------
 
 st.set_page_config(
-    page_title="FinCheck",
+    page_title="FinCheck AI",
     page_icon="💰",
     layout="centered"
 )
@@ -13,7 +13,7 @@ st.set_page_config(
 
 model = joblib.load("model.pkl")
 
-# ---------------- CUSTOM CSS ----------------
+# ---------------- CSS ----------------
 
 st.markdown("""
 <style>
@@ -23,20 +23,19 @@ st.markdown("""
     background:white;
 }
 
-/* Main title */
+/* Title */
 .main-title{
     font-size:4rem;
     font-weight:900;
     text-align:center;
     color:#16a34a;
-    margin-bottom:0px;
+    margin-bottom:0;
 }
 
-/* Subtitle */
 .subtitle{
     text-align:center;
-    font-size:1.2rem;
     color:#64748b;
+    font-size:1.2rem;
     margin-bottom:25px;
 }
 
@@ -47,43 +46,40 @@ h1,h2,h3,h4{
 
 /* Labels */
 label{
-    color:#334155 !important;
-    font-weight:600;
+    color:#0f172a !important;
+    font-weight:700 !important;
 }
 
-/* Inputs */
-/* Number inputs */
-
+/* Number Inputs */
 .stNumberInput input{
     background:#0f172a !important;
     color:white !important;
-    border-radius:12px !important;
     border:2px solid #16a34a !important;
+    border-radius:12px !important;
+    font-weight:700 !important;
 }
 
-/* Text inputs */
-
+/* Text Inputs */
 .stTextInput input{
     background:#0f172a !important;
     color:white !important;
-    border-radius:12px !important;
     border:2px solid #16a34a !important;
+    border-radius:12px !important;
+    font-weight:700 !important;
 }
 
 /* Selectbox */
-
 div[data-baseweb="select"] > div{
     background:#0f172a !important;
     color:white !important;
-    border-radius:12px !important;
     border:2px solid #16a34a !important;
+    border-radius:12px !important;
 }
-
-/* Dropdown text */
 
 div[data-baseweb="select"] *{
     color:white !important;
 }
+
 /* Metrics */
 [data-testid="stMetricLabel"]{
     color:#64748b !important;
@@ -91,43 +87,36 @@ div[data-baseweb="select"] *{
 
 [data-testid="stMetricValue"]{
     color:#16a34a !important;
-    font-weight:800;
+    font-weight:800 !important;
 }
 
-/* General text */
+/* Paragraphs */
 p{
     color:#334155 !important;
 }
 
-/* Buttons */
+/* Button */
 .stButton > button{
     background:#16a34a !important;
     color:white !important;
     border:none !important;
     border-radius:12px !important;
     font-weight:700 !important;
-    padding:12px 24px !important;
+    width:100%;
+    height:50px;
 }
 
 .stButton > button:hover{
     background:#15803d !important;
 }
 
-/* Progress Bar */
-.stProgress > div > div{
-    background:#16a34a !important;
-}
-
 /* Floating Money */
-
 .money{
     position:fixed;
     font-size:35px;
-    z-index:999;
     pointer-events:none;
-    animation-name:floatMoney;
-    animation-timing-function:linear;
-    animation-iteration-count:infinite;
+    z-index:999;
+    animation:floatMoney linear infinite;
 }
 
 .m1{
@@ -156,7 +145,6 @@ p{
 }
 
 @keyframes floatMoney{
-
     from{
         top:110%;
         transform:rotate(0deg);
@@ -182,7 +170,7 @@ p{
 
 st.markdown("""
 <div class="main-title">
-💰 FinCheck
+💰 FinCheck AI
 </div>
 
 <div class="subtitle">
@@ -195,25 +183,25 @@ st.markdown("---")
 # ---------------- INPUTS ----------------
 
 income = st.number_input(
-    "💵 Monthly Income (₹)",
+    "Monthly Income (₹)",
     min_value=0,
     step=1000
 )
 
 expenses = st.number_input(
-    "💸 Monthly Expenses (₹)",
+    "Monthly Expenses (₹)",
     min_value=0,
     step=1000
 )
 
 savings = st.number_input(
-    "🏦 Current Savings (₹)",
+    "Current Savings (₹)",
     min_value=0,
     step=1000
 )
 
 goal_name = st.selectbox(
-    "🎯 Select Your Dream",
+    "Choose Your Dream",
     [
         "🎸 Guitar",
         "💻 Laptop",
@@ -226,17 +214,14 @@ goal_name = st.selectbox(
 )
 
 goal_cost = st.number_input(
-    "💰 Dream Cost (₹)",
+    "Dream Cost (₹)",
     min_value=0,
     step=1000
 )
 
 st.write("")
 
-col1,col2,col3 = st.columns([1,1,1])
-
-with col2:
-    analyze = st.button("🚀 Analyze")
+analyze = st.button("🚀 Analyze")
 
 # ---------------- RESULTS ----------------
 
@@ -281,37 +266,37 @@ if analyze:
 
     st.markdown("---")
 
-    c1,c2,c3 = st.columns(3)
+    c1, c2, c3 = st.columns(3)
 
     with c1:
         st.metric(
-            "💚 Health Score",
+            "Health Score",
             f"{score}/100"
         )
 
     with c2:
         st.metric(
-            "🎯 Success Chance",
+            "Success Chance",
             f"{probability:.1f}%"
         )
 
     with c3:
         if months >= 0:
             st.metric(
-                "⏳ Months Needed",
+                "Months Needed",
                 f"{months:.1f}"
             )
         else:
             st.metric(
-                "⏳ Months Needed",
+                "Months Needed",
                 "∞"
             )
 
-    st.markdown("### 📈 Dream Progress")
+    st.markdown("### Dream Progress")
 
     progress = (
         savings /
-        max(goal_cost,1)
+        max(goal_cost, 1)
     ) * 100
 
     st.progress(
@@ -336,15 +321,15 @@ if analyze:
     else:
 
         st.error(
-            f"⚠️ Reaching {goal_name} may be difficult right now"
+            f"⚠️ Achieving {goal_name} may be difficult right now"
         )
 
-    st.markdown("### 🤖 AI Recommendation")
+    st.markdown("### AI Recommendation")
 
     if probability >= 80:
 
         st.success(
-            "Excellent financial position. Keep saving consistently."
+            "Excellent financial position. Continue saving consistently."
         )
 
     elif probability >= 50:
@@ -356,8 +341,11 @@ if analyze:
     else:
 
         st.error(
-            "Consider lowering expenses or increasing income to improve your chances."
+            "Consider reducing expenses or increasing income."
         )
 
 st.markdown("---")
-st.caption("💰 FinCheck | Machine Learning Powered Financial Goal Planner")
+
+st.caption(
+    "💰 FinCheck AI | Machine Learning Powered Financial Goal Planner"
+)
