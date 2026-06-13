@@ -52,14 +52,38 @@ label{
 }
 
 /* Inputs */
-input{
-    color:#0f172a !important;
-}
+/* Number inputs */
 
 .stNumberInput input{
-    color:#0f172a !important;
+    background:#0f172a !important;
+    color:white !important;
+    border-radius:12px !important;
+    border:2px solid #16a34a !important;
 }
 
+/* Text inputs */
+
+.stTextInput input{
+    background:#0f172a !important;
+    color:white !important;
+    border-radius:12px !important;
+    border:2px solid #16a34a !important;
+}
+
+/* Selectbox */
+
+div[data-baseweb="select"] > div{
+    background:#0f172a !important;
+    color:white !important;
+    border-radius:12px !important;
+    border:2px solid #16a34a !important;
+}
+
+/* Dropdown text */
+
+div[data-baseweb="select"] *{
+    color:white !important;
+}
 /* Metrics */
 [data-testid="stMetricLabel"]{
     color:#64748b !important;
