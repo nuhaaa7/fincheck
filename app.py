@@ -1,309 +1,339 @@
 import streamlit as st
 import joblib
 
-# ---------------- CONFIG ----------------
+# ---------------- PAGE CONFIG ----------------
 
 st.set_page_config(
-    page_title="FinCheck AI",
+    page_title="FinCheck",
     page_icon="💰",
     layout="centered"
 )
 
+# ---------------- LOAD MODEL ----------------
+
 model = joblib.load("model.pkl")
 
-# ---------------- CSS ----------------
+# ---------------- CUSTOM CSS ----------------
 
 st.markdown("""
 <style>
 
+/* Background */
 .stApp{
     background:white;
-    color:black;
 }
 
-*{
-    color:black !important;
-}
-
+/* Main title */
 .main-title{
-    font-size:3.5rem;
+    font-size:4rem;
     font-weight:900;
     text-align:center;
-    color:#16a34a !important;
+    color:#16a34a;
+    margin-bottom:0px;
 }
 
+/* Subtitle */
 .subtitle{
     text-align:center;
-    font-size:1.1rem;
-    margin-bottom:20px;
+    font-size:1.2rem;
+    color:#64748b;
+    margin-bottom:25px;
+}
+
+/* Headings */
+h1,h2,h3,h4{
+    color:#0f172a !important;
+}
+
+/* Labels */
+label{
+    color:#334155 !important;
+    font-weight:600;
+}
+
+/* Inputs */
+input{
+    color:#0f172a !important;
+}
+
+.stNumberInput input{
+    color:#0f172a !important;
+}
+
+/* Metrics */
+[data-testid="stMetricLabel"]{
+    color:#64748b !important;
+}
+
+[data-testid="stMetricValue"]{
+    color:#16a34a !important;
+    font-weight:800;
+}
+
+/* General text */
+p{
+    color:#334155 !important;
+}
+
+/* Buttons */
+.stButton > button{
+    background:#16a34a !important;
+    color:white !important;
+    border:none !important;
+    border-radius:12px !important;
+    font-weight:700 !important;
+    padding:12px 24px !important;
+}
+
+.stButton > button:hover{
+    background:#15803d !important;
+}
+
+/* Progress Bar */
+.stProgress > div > div{
+    background:#16a34a !important;
+}
+
+/* Floating Money */
+
+.money{
+    position:fixed;
+    font-size:35px;
+    z-index:999;
+    pointer-events:none;
+    animation-name:floatMoney;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+}
+
+.m1{
+    left:5%;
+    animation-duration:12s;
+}
+
+.m2{
+    left:25%;
+    animation-duration:18s;
+}
+
+.m3{
+    left:45%;
+    animation-duration:15s;
+}
+
+.m4{
+    left:65%;
+    animation-duration:20s;
+}
+
+.m5{
+    left:85%;
+    animation-duration:14s;
+}
+
+@keyframes floatMoney{
+
+    from{
+        top:110%;
+        transform:rotate(0deg);
+    }
+
+    to{
+        top:-20%;
+        transform:rotate(360deg);
+    }
 }
 
 </style>
+
+<div class="money m1">💸</div>
+<div class="money m2">💵</div>
+<div class="money m3">💰</div>
+<div class="money m4">💸</div>
+<div class="money m5">💵</div>
+
 """, unsafe_allow_html=True)
 
 # ---------------- HEADER ----------------
 
 st.markdown("""
 <div class="main-title">
-💰 FinCheck AI
+💰 FinCheck
 </div>
 
 <div class="subtitle">
-Track Finances • Build Dreams
+Track Finances • Build Dreams • Make Better Decisions
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- SIDEBAR ----------------
+st.markdown("---")
 
-page = st.sidebar.radio(
-    "Navigation",
+# ---------------- INPUTS ----------------
+
+income = st.number_input(
+    "💵 Monthly Income (₹)",
+    min_value=0,
+    step=1000
+)
+
+expenses = st.number_input(
+    "💸 Monthly Expenses (₹)",
+    min_value=0,
+    step=1000
+)
+
+savings = st.number_input(
+    "🏦 Current Savings (₹)",
+    min_value=0,
+    step=1000
+)
+
+goal_name = st.selectbox(
+    "🎯 Select Your Dream",
     [
-        "📊 Financial Health",
-        "🎯 Dream Vault"
+        "🎸 Guitar",
+        "💻 Laptop",
+        "🏍️ Bike",
+        "✈️ Vacation",
+        "📱 Phone",
+        "🚗 Car",
+        "🏠 House"
     ]
 )
 
-# ==================================================
-# FINANCIAL HEALTH PAGE
-# ==================================================
+goal_cost = st.number_input(
+    "💰 Dream Cost (₹)",
+    min_value=0,
+    step=1000
+)
 
-if page == "📊 Financial Health":
+st.write("")
 
-    st.header("📊 Financial Dashboard")
+col1,col2,col3 = st.columns([1,1,1])
 
-    st.subheader("💵 Income Sources")
+with col2:
+    analyze = st.button("🚀 Analyze")
 
-    salary = st.number_input(
-        "Salary",
-        min_value=0
+# ---------------- RESULTS ----------------
+
+if analyze:
+
+    features = [[
+        income,
+        expenses,
+        savings,
+        goal_cost
+    ]]
+
+    prediction = model.predict(features)[0]
+
+    probability = (
+        model.predict_proba(features)[0][1]
+        * 100
     )
 
-    freelance = st.number_input(
-        "Freelancing",
-        min_value=0
-    )
+    surplus = income - expenses
 
-    other_income = st.number_input(
-        "Other Income",
-        min_value=0
-    )
-
-    total_income = (
-        salary +
-        freelance +
-        other_income
-    )
-
-    st.success(
-        f"Total Income: ₹{total_income}"
-    )
-
-    st.subheader("💸 Expense Sources")
-
-    food = st.number_input(
-        "Food",
-        min_value=0
-    )
-
-    transport = st.number_input(
-        "Transport",
-        min_value=0
-    )
-
-    entertainment = st.number_input(
-        "Entertainment",
-        min_value=0
-    )
-
-    education = st.number_input(
-        "Education",
-        min_value=0
-    )
-
-    other_expenses = st.number_input(
-        "Other Expenses",
-        min_value=0
-    )
-
-    total_expenses = (
-        food +
-        transport +
-        entertainment +
-        education +
-        other_expenses
-    )
-
-    st.error(
-        f"Total Expenses: ₹{total_expenses}"
-    )
-
-    st.subheader("🏦 Savings")
-
-    savings = st.number_input(
-        "Current Savings",
-        min_value=0
-    )
-
-    if st.button("🚀 Analyze Financial Health"):
-
-        features = [[
-            total_income,
-            total_expenses,
-            savings,
-            50000
-        ]]
-
-        probability = (
-            model.predict_proba(
-                features
-            )[0][1]
-            * 100
+    if surplus > 0:
+        months = max(
+            0,
+            (goal_cost - savings) / surplus
         )
+    else:
+        months = -1
 
-        surplus = (
-            total_income -
-            total_expenses
-        )
-
-        if total_income > 0:
-
-            score = int(
-                max(
-                    0,
-                    min(
-                        100,
-                        (surplus /
-                         total_income)
-                        * 100
-                    )
+    if income > 0:
+        score = int(
+            max(
+                0,
+                min(
+                    100,
+                    (surplus / income) * 100
                 )
             )
+        )
+    else:
+        score = 0
 
-        else:
-            score = 0
+    st.markdown("---")
 
-        st.divider()
+    c1,c2,c3 = st.columns(3)
 
-        c1,c2,c3 = st.columns(3)
-
-        c1.metric(
+    with c1:
+        st.metric(
             "💚 Health Score",
             f"{score}/100"
         )
 
-        c2.metric(
-            "💰 Monthly Surplus",
-            f"₹{surplus}"
-        )
-
-        c3.metric(
-            "🎯 Success Index",
+    with c2:
+        st.metric(
+            "🎯 Success Chance",
             f"{probability:.1f}%"
         )
 
-        if score >= 75:
-
-            st.success(
-                "Excellent Financial Health"
-            )
-
-        elif score >= 50:
-
-            st.warning(
-                "Average Financial Health"
-            )
-
-        else:
-
-            st.error(
-                "Needs Improvement"
-            )
-
-# ==================================================
-# DREAM VAULT PAGE
-# ==================================================
-
-elif page == "🎯 Dream Vault":
-
-    st.header("🎯 Dream Vault")
-
-    dream_name = st.text_input(
-        "Dream Name"
-    )
-
-    dream_cost = st.number_input(
-        "Dream Cost (₹)",
-        min_value=0
-    )
-
-    current_savings = st.number_input(
-        "Savings Available (₹)",
-        min_value=0
-    )
-
-    monthly_saving = st.number_input(
-        "Monthly Saving Amount (₹)",
-        min_value=0
-    )
-
-    if st.button("✨ Analyze Dream"):
-
-        if monthly_saving > 0:
-
-            months = (
-                max(
-                    0,
-                    dream_cost -
-                    current_savings
-                )
-                /
-                monthly_saving
-            )
-
-            progress = (
-                current_savings /
-                max(dream_cost,1)
-            ) * 100
-
+    with c3:
+        if months >= 0:
             st.metric(
                 "⏳ Months Needed",
                 f"{months:.1f}"
             )
-
-            st.progress(
-                min(
-                    int(progress),
-                    100
-                )
-            )
-
-            st.write(
-                f"Progress: {progress:.1f}%"
-            )
-
-            if months <= 3:
-
-                st.success(
-                    f"You can achieve {dream_name} very soon!"
-                )
-
-            elif months <= 12:
-
-                st.warning(
-                    f"{dream_name} is achievable within a year."
-                )
-
-            else:
-
-                st.error(
-                    f"{dream_name} needs long-term planning."
-                )
-
         else:
-
-            st.error(
-                "Monthly saving must be greater than zero."
+            st.metric(
+                "⏳ Months Needed",
+                "∞"
             )
 
-st.divider()
-st.caption("💰 FinCheck ")
+    st.markdown("### 📈 Dream Progress")
+
+    progress = (
+        savings /
+        max(goal_cost,1)
+    ) * 100
+
+    st.progress(
+        min(
+            int(progress),
+            100
+        )
+    )
+
+    st.write(
+        f"Progress: {min(progress,100):.1f}%"
+    )
+
+    st.markdown("---")
+
+    if prediction == 1:
+
+        st.success(
+            f"🎉 High probability of achieving {goal_name}"
+        )
+
+    else:
+
+        st.error(
+            f"⚠️ Reaching {goal_name} may be difficult right now"
+        )
+
+    st.markdown("### 🤖 AI Recommendation")
+
+    if probability >= 80:
+
+        st.success(
+            "Excellent financial position. Keep saving consistently."
+        )
+
+    elif probability >= 50:
+
+        st.warning(
+            "Moderate chance. Reducing expenses can help you reach your goal faster."
+        )
+
+    else:
+
+        st.error(
+            "Consider lowering expenses or increasing income to improve your chances."
+        )
+
+st.markdown("---")
+st.caption("💰 FinCheck | Machine Learning Powered Financial Goal Planner")
