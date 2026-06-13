@@ -218,6 +218,12 @@ goal_cost = st.number_input(
     min_value=0,
     step=1000
 )
+target_days = st.number_input(
+    "🎯 Days Until You Want This Dream",
+    min_value=1,
+    value=90,
+    step=1
+)
 
 st.write("")
 
@@ -246,9 +252,18 @@ if analyze:
     surplus = income - expenses
 
     remaining_amount = max(
-        0,
-        goal_cost - savings
-    )
+    0,
+    goal_cost - savings
+)
+
+required_daily_saving = (
+    remaining_amount /
+    max(target_days, 1)
+)
+
+required_weekly_saving = (
+    required_daily_saving * 7
+)
 
     if surplus > 0:
 
@@ -314,29 +329,42 @@ if analyze:
                 "📅 Days Needed",
                 "∞"
             )
+st.markdown("### 💰 Savings Plan")
 
-    st.markdown("### 💰 Savings Plan")
+c4, c5, c6 = st.columns(3)
 
-    c4, c5, c6 = st.columns(3)
+with c4:
+    st.metric(
+        "Daily Target",
+        f"₹{required_daily_saving:.0f}"
+    )
 
-    with c4:
-        st.metric(
-            "Daily Target",
-            f"₹{daily_saving_needed:.0f}"
-        )
+with c5:
+    st.metric(
+        "Weekly Target",
+        f"₹{required_weekly_saving:.0f}"
+    )
 
-    with c5:
-        st.metric(
-            "Weekly Target",
-            f"₹{weekly_saving_needed:.0f}"
-        )
+with c6:
+    st.metric(
+        "Remaining Amount",
+        f"₹{remaining_amount:,.0f}"
+    )
+    st.markdown("### 🎯 Goal Feasibility")
 
-    with c6:
-        st.metric(
-            "Remaining Amount",
-            f"₹{remaining_amount:,.0f}"
-        )
+monthly_required = required_daily_saving * 30
 
+if surplus >= monthly_required:
+
+    st.success(
+        f"✅ You can realistically achieve {goal_name} within {target_days} days."
+    )
+
+else:
+
+    st.error(
+        f"❌ Based on your current finances, achieving {goal_name} within {target_days} days may be difficult."
+    )
     st.markdown("### 📈 Dream Progress")
 
     progress = (
@@ -371,19 +399,21 @@ if analyze:
 
     st.markdown("### 🤖 AI Recommendation")
 
-    st.info(
-        f"""
-To achieve {goal_name}:
+   st.info(
+    f"""
+Dream: {goal_name}
 
-• Save approximately ₹{daily_saving_needed:.0f} per day
+Target Time: {target_days} days
 
-• Save approximately ₹{weekly_saving_needed:.0f} per week
+Predicted Time: {days_needed:.0f} days
 
-• Remaining amount needed: ₹{remaining_amount:,.0f}
+Daily Saving Needed: ₹{required_daily_saving:.0f}
 
-• Estimated completion time: {days_needed:.0f} days
+Weekly Saving Needed: ₹{required_weekly_saving:.0f}
+
+Remaining Amount: ₹{remaining_amount:,.0f}
 """
-    )
+)
 
     if probability >= 80:
 
