@@ -75,15 +75,15 @@ Algorithm Used: Random Forest Classifier
 * Fast training and prediction
 
 =>Key Features
->Financial Health Score
->Success Probability Prediction
->Daily Savings Target
->Weekly Savings Target
->Goal Feasibility Analysis
->Dream Achievement Prediction
->Interactive Dashboard
->Machine Learning Based Insights
->Public Web Application
+* Financial Health Score
+* Success Probability Prediction
+* Daily Savings Target
+* Weekly Savings Target
+* Goal Feasibility Analysis
+* Dream Achievement Prediction
+* Interactive Dashboard
+* Machine Learning Based Insights
+* Public Web Application
 
 =>Architecture Flow Diagram
 ┌─────────────────────┐
