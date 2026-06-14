@@ -86,33 +86,35 @@ Algorithm Used: Random Forest Classifier
 * Public Web Application
 
 =>Architecture Flow Diagram
-    subgraph Input["User Inputs"]
-        A1[Income]
-        A2[Expenses]
-        A3[Savings]
-        A4[Goal Cost]
-        A5[Target Days]
-    end
-    subgraph Processing["Processing Layer"]
-        B1[FinCheck AI App<br/>Streamlit]
-        B2[Random Forest Classifier<br/>model.pkl]
-        B3[ML Prediction Layer]
-    end
-    subgraph Output["Prediction & Analytics"]
-        C1[Success Probability]
-        C2[Goal Feasibility]
-        C3[Financial Analytics]
-        C4[Health Score]
-        C5[Predicted Days]
-        C6[Daily Target]
-        C7[Weekly Target]
-        C8[Interactive Dashboard]
-    end
-    Input --> B1
-    B1 --> B2
-    B2 --> B3
-    B3 --> Output
+## Architecture Flow
 
+```mermaid
+flowchart LR
 
+    A[User Input]
+    A --> B[Income]
+    A --> C[Expenses]
+    A --> D[Savings]
+    A --> E[Goal Cost]
+    A --> F[Target Days]
+
+    B --> G[FinCheck AI App<br/>Streamlit]
+    C --> G
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H[Random Forest Model<br/>model.pkl]
+    H --> I[ML Prediction Layer]
+
+    I --> J[Success Probability]
+    I --> K[Goal Feasibility]
+    I --> L[Financial Analytics]
+    I --> M[Health Score]
+    I --> N[Predicted Days]
+    I --> O[Daily Target]
+    I --> P[Weekly Target]
+    I --> Q[Interactive Dashboard]
+```
 => Project Description 
 FinCheck AI is a Machine Learning-powered financial planning platform that predicts a user's likelihood of achieving financial goals and generates personalized savings plans. Using a Random Forest Classifier trained on 5,000 financial scenarios, the system analyzes income, expenses, savings, and goal cost to provide success probability, financial health insights, and actionable daily and weekly savings recommendations.
