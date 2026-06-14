@@ -116,5 +116,6 @@ flowchart LR
     I --> P[Weekly Target]
     I --> Q[Interactive Dashboard]
 ```
-=> Project Description 
+=> Project Description
+
 FinCheck AI is a Machine Learning-powered financial planning platform that predicts a user's likelihood of achieving financial goals and generates personalized savings plans. Using a Random Forest Classifier trained on 5,000 financial scenarios, the system analyzes income, expenses, savings, and goal cost to provide success probability, financial health insights, and actionable daily and weekly savings recommendations.
